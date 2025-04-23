@@ -13,7 +13,6 @@ export default function Navbar() {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const { data: session, isPending } = authClient.useSession();
-  console.log("Production session in the navbar: ", session);
   const pathName = usePathname();
 
   const handleSignout = async () => {
