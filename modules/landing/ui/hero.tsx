@@ -15,7 +15,7 @@ export function Hero() {
               </h1>
               <p className='max-w-[600px] text-muted-foreground'>
                 Secure, flexible, and developer-friendly authentication using
-                Drizzle, Neon, Zod, and tRPC.
+                Nextjs 15, TypeScript, ShadCN, Drizzle, Neon and Zod.
               </p>
             </div>
             <div className='flex flex-col gap-2 min-[400px]:flex-row'>
@@ -25,20 +25,6 @@ export function Hero() {
                   <ArrowRightIcon className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
                 </Button>
               </Link>
-            </div>
-            <div className='flex items-center gap-4 pt-4'>
-              <div className='flex -space-x-2'>
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className='inline-block h-8 w-8 rounded-full bg-gray-100 ring-2 ring-background dark:bg-gray-700'
-                  ></div>
-                ))}
-              </div>
-              <div className='text-sm text-muted-foreground'>
-                <span className='font-medium text-foreground'>250+</span>{" "}
-                developers trust BetterAuth
-              </div>
             </div>
           </div>
           <div className='mx-auto flex items-center justify-center rounded-xl border bg-card p-8 shadow-lg'>

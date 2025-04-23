@@ -1,3 +1,4 @@
+import { Footer } from "@/modules/landing/ui/footer";
 import { Hero } from "@/modules/landing/ui/hero";
 
 export default function LandingPage() {
