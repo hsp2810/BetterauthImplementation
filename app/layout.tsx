@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
-import "./globals.css";
-import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/modules/landing/ui/navbar";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
+import "./globals.css";
 
-const font = Inter();
+const font = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Better auth implementation",
