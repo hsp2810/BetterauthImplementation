@@ -53,11 +53,11 @@ export default function UserInfoCard({ user }: UserInfoCardProps) {
         </h4>
 
         <h4 className='font-semibold text-muted-foreground'>Platform</h4>
-        <h4 className=''>
+        <div className='flex gap-2 flex-wrap'>
           {user.accounts.map((account) => (
-            <div key={account.id}>{account.providerId.toUpperCase()}</div>
+            <h4 key={account.id}>{account.providerId.toUpperCase()}</h4>
           ))}
-        </h4>
+        </div>
 
         <h4 className='font-semibold text-muted-foreground'>Created at</h4>
         <h4 className=''>{getTimeAgo(user.createdAt)}</h4>

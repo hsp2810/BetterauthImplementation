@@ -54,3 +54,5 @@ export type ForgotPasswordEmailSchema = z.infer<
 export type ForgotPasswordPasswordSchema = z.infer<
   typeof forgotPasswordPasswordSchema
 >;
+
+// Other

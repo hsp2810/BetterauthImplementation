@@ -1,13 +1,14 @@
 import React from "react";
 import AdminUsersTable from "./admin-users-table";
 import { db } from "@/db";
-import { account, session, user } from "@/db/schema";
+import { account, request, session, user } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { UserWithAccountsAndSessions } from "@/types";
+import { RequestsWithUser, UserWithAccountsAndSessions } from "@/types";
 import UserInfoCard from "@/modules/user/ui/user-info-card";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getUserWithAccountsAndSessions } from "@/modules/user/server";
+import AdminRequestTable from "./admin-request-table";
 
 export default async function AdminHomeSection() {
   const rows = await db
@@ -61,6 +62,29 @@ export default async function AdminHomeSection() {
   );
   if (!loggedInAdmin) return <h1>User not found</h1>;
 
+  const requestRows = await db
+    .select({
+      request,
+      user,
+    })
+    .from(request)
+    .innerJoin(user, eq(user.id, request.userId));
+
+  const requestMap = new Map<string, RequestsWithUser>();
+
+  for (const row of requestRows) {
+    const requestId = row.request.id;
+
+    if (!requestMap.has(requestId)) {
+      requestMap.set(requestId, {
+        ...row.request,
+        user: row.user,
+      });
+    }
+  }
+
+  const requests = Array.from(requestMap.values());
+
   return (
     <div className='mt-10'>
       <h2 className='font-bold text-3xl'>Admin Console</h2>
@@ -71,6 +95,11 @@ export default async function AdminHomeSection() {
           <AdminUsersTable users={usersWithAccountsAndSessions} />
         </div>
 
+        <div className='space-y-2'>
+          <h3 className='font-semibold text-lg'>Admin Requests</h3>
+          <AdminRequestTable requests={requests} />
+        </div>
+
         <div className='space-y-2 flex flex-col items-center'>
           <h3 className='font-semibold text-lg'>Your account</h3>
           <UserInfoCard user={loggedInAdmin} />
@@ -78,31 +107,4 @@ export default async function AdminHomeSection() {
       </div>
     </div>
   );
-}
-
-export function getTimeUntil(targetDate: string | Date | number): string {
-  const date = new Date(targetDate);
-  const now = new Date();
-  const diffMs = date.getTime() - now.getTime();
-
-  if (diffMs <= 0) return "Already passed";
-
-  const seconds = Math.floor(diffMs / 1000);
-  const minutes = Math.floor(diffMs / 60);
-  const hours = Math.floor(diffMs / (60 * 60));
-  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (seconds < 60) return "A few seconds";
-  if (minutes < 2) return "A minute";
-  if (minutes < 60) return `${minutes} minutes`;
-  if (hours < 2) return "An hour";
-  if (hours < 24) return `${hours} hours`;
-  if (days === 1) return "Tomorrow";
-  if (days <= 90) return `${days} days`;
-
-  return date.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 }

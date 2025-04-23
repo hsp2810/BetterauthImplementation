@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getUserWithAccountsAndSessions } from "../server";
+import UserAdminApplicationCard from "./user-admin-application-card";
 import UserInfoCard from "./user-info-card";
 
 export default async function UserHomeSection() {
@@ -20,6 +21,7 @@ export default async function UserHomeSection() {
 
       <div className='space-y-2 mt-5'>
         <UserInfoCard user={loggedInUser} />
+        <UserAdminApplicationCard user={loggedInUser} />
       </div>
     </div>
   );
