@@ -40,7 +40,7 @@ export default function UserInfoCard({ user }: UserInfoCardProps) {
         <h4 className=''>{user.name}</h4>
 
         <h4 className='font-semibold text-muted-foreground'>Email</h4>
-        <h4 className=''>{user.email}</h4>
+        <h4 className='truncate'>{user.email}</h4>
 
         <h4 className='font-semibold text-muted-foreground'>Role</h4>
         <h4 className=''>{user.role?.toUpperCase()}</h4>

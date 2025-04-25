@@ -56,7 +56,7 @@ export default function SignInForm() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8 min-w-sm md:min-w-md'
+          className='space-y-8 min-w-xs md:min-w-md'
         >
           <FormField
             control={form.control}
