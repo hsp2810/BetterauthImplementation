@@ -21,10 +21,10 @@ export default async function AdminUsersTable({
   const loggedInUser = session?.user;
   return (
     <>
-      <p className='text-sm font-semibold text-destructive'>
+      <p className='text-xs md:text-sm font-semibold text-destructive'>
         Cannot show full id and password of the user even to the admins.
       </p>
-      <p className='text-sm font-semibold text-destructive'>
+      <p className='text-xs md:text-sm font-semibold text-destructive'>
         You need to be a superadmin to edit, ban or delete an admin
       </p>
       <Table>

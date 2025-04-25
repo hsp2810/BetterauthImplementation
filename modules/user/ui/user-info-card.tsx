@@ -15,7 +15,7 @@ export default function UserInfoCard({ user }: UserInfoCardProps) {
         <UserFunctionMenu user={user} />
       </div>
 
-      <p className='px-6 text-destructive font-semibold text-sm'>
+      <p className='px-6 text-destructive font-semibold text-xs md:text-sm'>
         Id is not shown full for security reasons
       </p>
       <Avatar className='size-36 m-auto'>
@@ -32,7 +32,7 @@ export default function UserInfoCard({ user }: UserInfoCardProps) {
             .concat(user.name.split(" ")[1].charAt(0).toUpperCase())}
         </AvatarFallback>
       </Avatar>
-      <CardContent className='grid grid-cols-2 gap-4'>
+      <CardContent className='grid grid-cols-2 gap-4 text-sm md:text-base'>
         <h4 className='font-semibold text-muted-foreground'>Id</h4>
         <h4 className=''>{user.id.slice(0, 7).concat("...")}</h4>
 

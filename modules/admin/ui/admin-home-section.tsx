@@ -87,7 +87,7 @@ export default async function AdminHomeSection() {
 
   return (
     <div className='mt-10'>
-      <h2 className='font-bold text-3xl'>Admin Console</h2>
+      <h2 className='font-bold text-2xl md:text-3xl'>Admin Console</h2>
 
       <div className='space-y-10 mt-5'>
         <div className='space-y-2'>

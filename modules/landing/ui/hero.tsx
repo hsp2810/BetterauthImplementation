@@ -4,7 +4,10 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <section id='hero' className='relative pt-32 md:pt-44 pb-16 md:pb-32'>
+    <section
+      id='hero'
+      className='relative px-6 md:px-0 pt-36 md:pt-44 pb-16 md:pb-32'
+    >
       <div className='absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/20 via-background to-background'></div>
       <div className='container px-4 md:px-6'>
         <div className='grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]'>
@@ -18,7 +21,7 @@ export function Hero() {
                 Nextjs 15, TypeScript, ShadCN, Drizzle, Neon and Zod.
               </p>
             </div>
-            <div className='flex flex-col gap-2 min-[400px]:flex-row'>
+            <div className='flex flex-col justify-center md:justify-start gap-2 min-[400px]:flex-row'>
               <Link href='/sign-in'>
                 <Button size='lg' className='group'>
                   Get Started

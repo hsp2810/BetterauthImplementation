@@ -7,7 +7,7 @@ export function Footer() {
         © 2025 BetterAuthApplication. All rights reserved.
       </p>
       <p className='flex justify-center text-sm text-muted-foreground text-center md:text-left'>
-        Built with{" "}
+        Built by{" "}
         <a
           target='_blank'
           href='https://www.harshitpatel.dev/'

@@ -32,11 +32,13 @@ export default function Navbar() {
 
   if (isPending) {
     return (
-      <div className='fixed top-0 w-full z-50 transition-all duration-300'>
+      <div className='fixed top-0 w-full z-50 transition-all duration-300 px-5 md:px-0'>
         <div className='container flex h-16 items-center justify-between mx-auto'>
           <Link href={"/"} className='flex items-center gap-2'>
-            <LockIcon className='h-6 w-6 text-primary' />
-            <span className='font-bold text-xl'>BetterAuthApplication</span>
+            <LockIcon className='size-5 text-primary' />
+            <span className='hidden md:block font-bold text-xl'>
+              BetterAuthApplication
+            </span>
           </Link>
 
           <div className='flex items-center gap-4'>
@@ -53,7 +55,7 @@ export default function Navbar() {
   return (
     <div
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300",
+        "fixed top-0 w-full z-50 transition-all duration-300 px-5 md:px-0",
         isScrolled
           ? "bg-background/95 backdrop-blur-md shadow-sm"
           : "bg-transparent"
@@ -61,8 +63,10 @@ export default function Navbar() {
     >
       <div className='container flex h-16 items-center justify-between mx-auto'>
         <Link href={"/"} className='flex items-center gap-2'>
-          <LockIcon className='h-6 w-6 text-primary' />
-          <span className='font-bold text-xl'>BetterAuthApplication</span>
+          <LockIcon className='size-5 text-primary' />
+          <span className='hidden md:block font-bold text-xl'>
+            BetterAuthApplication
+          </span>
         </Link>
 
         <div className='flex items-center gap-4'>

@@ -58,7 +58,7 @@ export default function AdminUsersEditForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='space-y-8 min-w-md mt-4'
+        className='space-y-8 md:min-w-md mt-4'
       >
         <FormField
           control={form.control}

@@ -26,11 +26,7 @@ interface UserEditFormProps {
   setOpen: any;
 }
 
-export default function UserEditForm({
-  id,
-  name,
-  setOpen,
-}: UserEditFormProps) {
+export default function UserEditForm({ id, name, setOpen }: UserEditFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const form = useForm<UserEditSchema>({
@@ -58,7 +54,7 @@ export default function UserEditForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='space-y-8 min-w-md mt-4'
+        className='space-y-8 md:min-w-md mt-4'
       >
         <FormField
           control={form.control}
