@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getTimeAgo } from "@/lib/date";
 import { UserWithAccountsAndSessions } from "@/types";
 import UserFunctionMenu from "./user-function-menu";
+import { textToInitials } from "@/lib/text";
 
 interface UserInfoCardProps {
   user: UserWithAccountsAndSessions;
@@ -25,11 +26,7 @@ export default function UserInfoCard({ user }: UserInfoCardProps) {
           alt={user.name}
         />
         <AvatarFallback className='font-semibold text-2xl'>
-          {user.name
-            .split(" ")[0]
-            .charAt(0)
-            .toUpperCase()
-            .concat(user.name.split(" ")[1].charAt(0).toUpperCase())}
+          {textToInitials(user.name)}
         </AvatarFallback>
       </Avatar>
       <CardContent className='grid grid-cols-2 gap-4 text-sm md:text-base'>
