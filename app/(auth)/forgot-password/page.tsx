@@ -54,12 +54,13 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className='space-y-5'>
-      <h1 className='font-bold text-2xl'>Forgot password</h1>
-      <p className='text-sm text-muted-foreground'>
+    <div className='w-3/4 mx-auto my-10'>
+      <h1 className='text-3xl font-bold'>Forgot password?</h1>
+      <p className='text-sm text-muted-foreground mt-2 mb-4'>
         Enter your account email on which we will send you the forgot password
         link
       </p>
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -72,7 +73,7 @@ export default function ForgotPassword() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='enter email' {...field} />
+                  <Input placeholder='Enter account email' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

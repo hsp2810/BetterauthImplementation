@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-import { actionUserEdit } from "@/actions/user";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -37,17 +36,7 @@ export default function UserEditForm({ id, name, setOpen }: UserEditFormProps) {
   });
 
   function onSubmit(values: UserEditSchema) {
-    startTransition(() => {
-      actionUserEdit(values, id).then((data) => {
-        if ("success" in data) {
-          toast.success(data.success);
-          setOpen(false);
-          router.refresh();
-        } else if ("error" in data) {
-          toast.error(data.error);
-        }
-      });
-    });
+    startTransition(() => {});
   }
 
   return (

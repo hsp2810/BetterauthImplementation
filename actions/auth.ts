@@ -12,7 +12,17 @@ export const actionRegister = async (
   values: UserRegisterSchema
 ): Promise<ActionResult> => {
   try {
-    const { name, email, password } = values;
+    const { username, name, email, password } = values;
+
+    const userExists = await db
+      .select()
+      .from(user)
+      .where(eq(user.username, username));
+    if (userExists[0]) {
+      return {
+        error: "Username already exists! Please choose a different one!",
+      };
+    }
 
     const response = await auth.api.signUpEmail({
       body: {

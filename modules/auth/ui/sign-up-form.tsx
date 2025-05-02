@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { UserRegisterSchema, userRegisterSchema } from "@/lib/validators/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2Icon, User } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -25,19 +25,12 @@ export default function SignUpForm() {
   const form = useForm<UserRegisterSchema>({
     resolver: zodResolver(userRegisterSchema),
     defaultValues: {
+      username: "",
       email: "",
       name: "",
       password: "",
     },
   });
-
-  const handleGoogleAuth = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/home",
-      errorCallbackURL: "/sign-up",
-    });
-  };
 
   async function onSubmit(values: UserRegisterSchema) {
     startTransition(() => {
@@ -58,10 +51,21 @@ export default function SignUpForm() {
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8 min-w-md'
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+          <FormField
+            control={form.control}
+            name='username'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder='Choose username' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name='name'
@@ -69,7 +73,7 @@ export default function SignUpForm() {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='enter name' {...field} />
+                  <Input placeholder='Enter name' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -83,7 +87,7 @@ export default function SignUpForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='enter email' {...field} />
+                  <Input placeholder='Enter email' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,42 +101,31 @@ export default function SignUpForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder='enter password' {...field} />
+                  <Input
+                    type='password'
+                    placeholder='Enter password'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type='submit' disabled={isPending}>
-            {isPending ? <Loader2Icon className='animate-spin' /> : "Sign-up"}
+          <Button type='submit' disabled={isPending} className='w-full'>
+            {isPending ? (
+              <Loader2Icon className='animate-spin' />
+            ) : (
+              "Create an account"
+            )}
           </Button>
+          <div className='text-sm text-muted-foreground text-center'>
+            Already have an account?{" "}
+            <Link href='/sign-in' className='hover:text-white transition'>
+              Sign-in
+            </Link>
+          </div>
         </form>
-
-        <div className='text-muted-foreground text-sm'>
-          Already have an account
-          <Link href={"/sign-in"} className='underline underline-offset-2 ml-1'>
-            Sign-in
-          </Link>
-        </div>
       </Form>
-
-      <div className='flex flex-col items-center gap-5'>
-        <div className='relative flex justify-center text-xs uppercase'>
-          <span className='bg-background px-2 text-muted-foreground'>
-            Or continue with
-          </span>
-        </div>
-
-        <Button
-          variant='outline'
-          type='button'
-          disabled={isPending}
-          onClick={handleGoogleAuth}
-        >
-          {isPending && <Loader2Icon className='mr-2 h-4 w-4 animate-spin' />}
-          Google
-        </Button>
-      </div>
     </>
   );
 }

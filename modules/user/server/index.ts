@@ -1,5 +1,6 @@
 import { db } from "@/db";
-import { user, account, session } from "@/db/schema";
+import { account, session, user, userFollow } from "@/db/schema";
+import { UserWithFollow } from "@/types";
 import { eq } from "drizzle-orm";
 
 export async function getUserWithAccountsAndSessions(userId: string) {
@@ -36,3 +37,28 @@ export async function getUserWithAccountsAndSessions(userId: string) {
     sessions,
   };
 }
+
+// Get followers
+export const getFollowers = async (
+  followingId: string
+): Promise<UserWithFollow[]> => {
+  return await db
+    .select({
+      user,
+      userFollow,
+    })
+    .from(userFollow)
+    .innerJoin(user, eq(userFollow.followerId, user.id))
+    .where(eq(userFollow.followingId, followingId));
+};
+
+//Get following
+export const getFollowing = async (
+  followerId: string
+): Promise<UserWithFollow[]> => {
+  return await db
+    .select({ user, userFollow })
+    .from(userFollow)
+    .innerJoin(user, eq(userFollow.followingId, user.id))
+    .where(eq(userFollow.followerId, followerId));
+};

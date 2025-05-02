@@ -1,28 +1,89 @@
 "use server";
 
 import { db } from "@/db";
-import { request, user } from "@/db/schema";
-import { UserEditSchema } from "@/lib/validators/zod";
-import { RequestsWithUser } from "@/types";
-import { eq } from "drizzle-orm";
+import { account, notification, request, user, userFollow } from "@/db/schema";
+import { auth } from "@/lib/auth";
+import {
+  UserEditSchema,
+  UserUsernameSchema,
+  ForgotPasswordPasswordSchema,
+} from "@/lib/validators/zod";
+import { RequestsWithUser, User } from "@/types";
+import { and, eq } from "drizzle-orm";
+import { headers } from "next/headers";
 
 type ActionResult = { success: string } | { error: string };
 
-export const actionUserEdit = async (
+export const actionProfileUpdate = async (
   values: UserEditSchema,
   id: string
 ): Promise<ActionResult> => {
   try {
     const updatedUser = await db
       .update(user)
-      .set({ name: values.name })
+      .set(values)
       .where(eq(user.id, id));
 
     if (!updatedUser) {
-      return { error: "Some error occured while updating the user!" };
+      return { error: "Some error occured while updating the profile!" };
     }
 
-    return { success: "Account updated successfully!" };
+    return { success: "Profile updated successfully!" };
+  } catch (error) {
+    return { error: "Unexpected error occurred. Please try again." };
+  }
+};
+
+export const actionUpdatePassword = async (
+  values: ForgotPasswordPasswordSchema
+): Promise<ActionResult> => {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session) return { error: "Session not found" };
+
+    const updatedPassword = await db
+      .update(account)
+      .set({ password: values.password })
+      .where(eq(account.userId, session.user.id));
+
+    if (!updatedPassword) {
+      return { error: "Some error occured while updating the password!" };
+    }
+
+    return {
+      success:
+        "Password updated successfully! Now you can login with Email and Password too!",
+    };
+  } catch (error) {
+    return { error: "Unexpected error occurred. Please try again." };
+  }
+};
+
+export const actionUserUsername = async (
+  values: UserUsernameSchema,
+  id: string
+): Promise<ActionResult> => {
+  try {
+    const userExists = await db
+      .select()
+      .from(user)
+      .where(eq(user.username, values.username));
+    if (userExists[0]) {
+      return {
+        error: "Username already exists! Please choose a different one!",
+      };
+    }
+
+    const updatedUser = await db
+      .update(user)
+      .set(values)
+      .where(eq(user.id, id));
+
+    if (!updatedUser) {
+      return { error: "Some error occured while updating the username!" };
+    }
+
+    return { success: "Username updated successfully!" };
   } catch (error) {
     return { error: "Unexpected error occurred. Please try again." };
   }
@@ -131,6 +192,89 @@ export const actionAdminRequestResponse = async (
     } else {
       return { success: "Request revoked successfully" };
     }
+  } catch (error) {
+    return { error: "Unexpected error occurred. Please try again." };
+  }
+};
+
+export const actionFollowUser = async (
+  sender: User,
+  receiver: User
+): Promise<ActionResult> => {
+  try {
+    if (receiver.user_type === "public") {
+      const follow = await db
+        .insert(userFollow)
+        .values({
+          followerId: sender.id,
+          followingId: receiver.id,
+        })
+        .returning();
+
+      if (!follow) {
+        return {
+          error: `Something went wrong in following the user ${receiver.username}`,
+        };
+      }
+    } else {
+      //Send a notification
+      const newNotification = await db.insert(notification).values({
+        id: crypto.randomUUID(),
+        senderId: sender.id,
+        receiverId: receiver.id,
+        type: "follow_request",
+        targetType: "user",
+        targetId: sender.id,
+      });
+      if (!newNotification) {
+        return {
+          error: `Something went wrong in sending a follow request to ${receiver.username}`,
+        };
+      }
+
+      return { success: `Follow request sent to ${receiver.username}` };
+    }
+
+    return { success: `You have started following ${receiver.username}` };
+  } catch (error) {
+    return { error: "Unexpected error occurred. Please try again." };
+  }
+};
+
+export const actionUnFollowUser = async (
+  userObj: User
+): Promise<ActionResult> => {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session) {
+      return { error: "Session not found" };
+    }
+
+    const dbUser = await db
+      .select()
+      .from(user)
+      .where(eq(user.id, session.user.id));
+
+    if (!dbUser[0]) {
+      return { error: "User not found!" };
+    }
+
+    const follow = await db
+      .delete(userFollow)
+      .where(
+        and(
+          eq(userFollow.followerId, session.user.id),
+          eq(userFollow.followingId, userObj.id)
+        )
+      );
+
+    if (!follow) {
+      return {
+        error: `Something went wrong in unfollowing the user ${userObj.username}`,
+      };
+    }
+
+    return { success: `You are not following ${userObj.username} anymore!` };
   } catch (error) {
     return { error: "Unexpected error occurred. Please try again." };
   }

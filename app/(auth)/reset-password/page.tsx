@@ -61,8 +61,8 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className='space-y-5'>
-      <h1 className='font-bold text-2xl'>Reset password</h1>
+    <div className='w-3/4 mx-auto my-10'>
+      <h1 className='text-3xl font-bold mb-4'>Reset password?</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -75,7 +75,7 @@ export default function ForgotPassword() {
               <FormItem>
                 <FormLabel>New Password</FormLabel>
                 <FormControl>
-                  <Input placeholder='enter new password' {...field} />
+                  <Input type="password" placeholder='Enter new password' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

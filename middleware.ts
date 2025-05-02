@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
     return;
   }
 
-  if (privateRoutes.includes(currentLocation.slice(0, 5))) {
+  if (privateRoutes.includes(currentLocation.slice(0))) {
     if (!isLoggedIn || !isVerified) {
       return NextResponse.redirect(new URL("/sign-in", req.url));
     }

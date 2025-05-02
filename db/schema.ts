@@ -1,19 +1,56 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
-export const user = pgTable("user", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified").notNull(),
-  image: text("image"),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
-  role: text("role"),
-  adminRequested: boolean("admin_requested"),
-  banned: boolean("banned"),
-  banReason: text("ban_reason"),
-  banExpires: timestamp("ban_expires"),
-});
+export const user = pgTable(
+  "user",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    username: text("username"),
+    email: text("email").notNull(),
+    emailVerified: boolean("email_verified").notNull(),
+    image: text("image"),
+    role: text("role"),
+    user_type: text("user_type").default("public"),
+    adminRequested: boolean("admin_requested"),
+    banned: boolean("banned"),
+    banReason: text("ban_reason"),
+    banExpires: timestamp("ban_expires"),
+
+    user_bio: text("user_bio"),
+
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+  },
+  (t) => [
+    uniqueIndex("username_idx").on(t.username),
+    uniqueIndex("email_idx").on(t.email),
+  ]
+);
+
+export const userFollow = pgTable(
+  "user_follow",
+  {
+    followerId: text("follower_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    followingId: text("following_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (t) => ({
+    pk: primaryKey(t.followerId, t.followingId),
+  })
+);
 
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
@@ -27,6 +64,28 @@ export const session = pgTable("session", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   impersonatedBy: text("impersonated_by"),
+});
+
+export const notification = pgTable("notification", {
+  id: text("id").primaryKey(),
+
+  receiverId: text("receiver_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+
+  type: text("type").notNull(), // e.g., 'follow_request', 'follow_accepted', 'video_posted', 'like', 'comment'
+
+  message: text("message"),
+
+  senderId: text("sender_id").references(() => user.id, {
+    onDelete: "set null",
+  }),
+
+  targetType: text("target_type"), // e.g., 'video', 'post', 'comment', 'user'
+  targetId: text("target_id"), // UUID or ID of the target object
+
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  read: boolean("read").notNull().default(false),
 });
 
 export const account = pgTable("account", {
